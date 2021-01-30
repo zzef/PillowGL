@@ -1,5 +1,6 @@
 #include "context.h"
 #include "render_unit.h"
+#include <stdio.h>
 
 // Exceution unit for carrying out execution of
 // graphics pipeiline
