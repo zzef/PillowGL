@@ -16,6 +16,19 @@ void attach_vertex_shader(
 	_unit->_vertex_shader = _vertex_shader;
 }
 
+//Attach pixel shader to render unit
+void attach_pixel_shader( 
+	struct render_unit* _unit,
+	void ( *_pixel_shader ) (
+		void* uniform_in,
+		void* varying_in,
+		uint32_t* color
+	)	
+) {
+	_unit->_pixel_shader = _pixel_shader;
+}
+
+
 // Exceution unit for carrying out execution of
 // graphics pipeiline
 void execute_unit(
@@ -26,7 +39,7 @@ void execute_unit(
 	size_t vb_size
 ) {
 	
-	for ( size_t i = 0; i < vb_size; i++ ) {
+	for ( size_t i = 0; i < vb_size; i+=3 ) {
 
 		/*
 		printf("v_in ( %f, %f, %f )\n",
@@ -36,14 +49,34 @@ void execute_unit(
 		);
 		*/
 
-		struct vec3 vertex_out;
-		void* varyings_out;
+		struct vec3 vertex_0_out;
+		void* varyings_0_out;
 		_unit->_vertex_shader(
 			_in.uniforms,
 			_in.attributes[ i ],
 			&vertex_buffer[ i ],
-			&vertex_out,
-			varyings_out
+			&vertex_0_out,
+			varyings_0_out
+		);
+
+		struct vec3 vertex_1_out;
+		void* varyings_1_out;
+		_unit->_vertex_shader(
+			_in.uniforms,
+			_in.attributes[ i + 1 ],
+			&vertex_buffer[ i + 1 ],
+			&vertex_1_out,
+			varyings_1_out
+		);
+
+		struct vec3 vertex_2_out;
+		void* varyings_2_out;
+		_unit->_vertex_shader(
+			_in.uniforms,
+			_in.attributes[ i + 2 ],
+			&vertex_buffer[ i + 2 ],
+			&vertex_2_out,
+			varyings_2_out
 		);
 
 		/*
@@ -61,7 +94,9 @@ void execute_unit(
 		// get a color from pixel shader
 		// paint pixel with color
 
-		set_pixel( _ctx, vertex_out.x, vertex_out.y, 0, 0);
+		
+
+		set_pixel( _ctx, vertex_2_out.x, vertex_2_out.y, 0, 0);
 		
 	}		
 

@@ -91,13 +91,6 @@ void gfx_loop( struct context* _ctx ) {
 			stop_context( _ctx );
 	}
 
-	uint32_t r = 0 << 24;
-	uint32_t g = 0 << 16; 
-	uint32_t b = 0 << 8;
-	uint32_t a = 255 << 0;
-	
-	uint32_t color = r | g | b | a ;
-
 	struct render_unit _unit;
 	attach_vertex_shader( &_unit, vertex_shader );
 
@@ -109,26 +102,17 @@ void gfx_loop( struct context* _ctx ) {
 	
 	};
 
-	uint32_t v0 = 343;
-	uint32_t v1 = 876;
-	uint32_t v2 = 125;
+	uint32_t col = 255;
 
-	struct attr atts0 = {
-		5.6f,
-		{ 8.1f, 0.8f, 4.6f }
+	uint32_t color_red = col << 24;
+	uint32_t color_green = col << 16;
+	uint32_t color_blue = col << 8;
+
+	void* vertex_attributes[ 3 ] = { 
+		&color_red,
+		&color_blue,
+		&color_green
 	};
-
-	struct attr atts1 = {
-		1.5f,
-		{ 4.1f, 0.4f, 5.6f }
-	};
-
-	struct attr atts2 = {
-		9.5f,
-		{ 0.7f, 7.4f, 8.6f }
-	};
-
-	void* vertex_attributes[ 3 ] = { &atts0, &atts1, &atts2 };
 
 	struct execution_unit_in _in = { NULL, vertex_attributes };
 

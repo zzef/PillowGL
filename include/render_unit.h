@@ -45,6 +45,16 @@ void attach_vertex_shader(
 	)
 );
 
+
+void attach_pixel_shader( 
+	struct render_unit* _unit,
+	void ( *_pixel_shader ) (
+		void* uniform_in,
+		void* varying_in,
+		uint32_t* color
+	)	
+);
+
 void execute_unit(
 	struct context* _ctx,
 	struct render_unit* _unit,
