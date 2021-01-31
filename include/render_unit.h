@@ -13,8 +13,17 @@ struct render_unit {
 
 	// Function pointer for vertex shader
 	void ( *_vertex_shader ) (
+		// uniforms in
+		// data in
 		struct vertex* vertex_in, 
 		struct vertex* vertex_out
+		// data out
+	);
+
+	void ( *_pixel_shader ) (
+		// uniforms in
+		// data in
+		// color out
 	);	
 
 };
@@ -32,7 +41,8 @@ void attach_vertex_shader(
 void execute_unit(
 	struct context* _ctx,
 	struct render_unit* _unit,
-	void*** vertex_attributes_buffer, 
+	void* uniforms,
+	void** vertex_attributes, 
 	size_t va_size,
 	struct vertex* vertex_buffer,
 	size_t vb_size

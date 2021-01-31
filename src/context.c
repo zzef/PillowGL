@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 //Create context struct and initialize values
 struct context* create_context() {
@@ -150,17 +151,29 @@ static void clear_context( struct context* _ctx ) {
 // Starts graphical context main loop
 void start_context( struct context* _ctx ) {
 
+	int frames = 0;
+	clock_t before = clock();
+
 	// Typical clear, render, display loop
 	// api user is expected to issue draw calls
 	// inside _main_loop implementation
 	while( ! _ctx->stop ) {
+
 		clear_context( _ctx );
 		_ctx->_main_loop( _ctx );
 		_ctx->_display( 
 			_ctx->_frame->frame_buffer,
 			_ctx->_frame->width,
 			_ctx->_frame->height
-		 );
+		);
+	
+		if( (clock() - before ) / CLOCKS_PER_SEC > 1 ) {
+			before = clock();
+			printf("%d FPS\n",frames);
+			frames=0;
+		}
+		frames++;
+
 	}
 	_ctx->stop = 0;
 }

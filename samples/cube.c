@@ -11,7 +11,7 @@ SDL_Renderer *renderer;
 
 int16_t width = 1280;
 int16_t height = 720;
-
+float t = 0;
 
 struct vertex vertex_buffer[ 36 ] = { 
 
@@ -86,9 +86,9 @@ void vertex_shader(
 	struct vertex* vertex_out 
 ) {
 	
-	vertex_out->x = vertex_in->x + 20;	
-	vertex_out->y = vertex_in->y + 20;	
-	vertex_out->z = vertex_in->z + 20;	
+	vertex_out->x = vertex_in->x;	
+	vertex_out->y = vertex_in->y;	
+	vertex_out->z = vertex_in->z;	
 
 }
 
@@ -111,12 +111,23 @@ void gfx_loop( struct context* _ctx ) {
 	struct render_unit _unit;
 	attach_vertex_shader( &_unit, vertex_shader );
 
+	struct vertex triangle[ 3 ] = { 
+
+		{ 150 + t, 300, 0 },
+		{ 500 + t, 500, 0 },
+		{ 100 + t, 500, 1.0f },
+	
+	};
+
+	t += 2;
+	
 	execute_unit( 
 		_ctx,
 		&_unit,
 		NULL,
+		NULL,
 		0,
-		vertex_buffer,
+		triangle,
 		3
 	);
 
