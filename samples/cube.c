@@ -13,7 +13,7 @@ int16_t width = 1280;
 int16_t height = 720;
 float t = 0;
 
-struct vertex vertex_buffer[ 36 ] = { 
+struct vec3 vertex_buffer[ 36 ] = { 
 
 	{-1.0f,-1.0f,-1.0f },
 	{-1.0f,-1.0f, 1.0f },
@@ -82,10 +82,14 @@ void display(
 
 
 void vertex_shader(
-	struct vertex* vertex_in, 
-	struct vertex* vertex_out 
+	void* data_in,
+	struct vec3* vertex_in, 
+	struct vec3* vertex_out,
+	void* data_out
 ) {
-	
+
+	printf( "data %d\n", *( uint32_t* ) data_in );
+		
 	vertex_out->x = vertex_in->x;	
 	vertex_out->y = vertex_in->y;	
 	vertex_out->z = vertex_in->z;	
@@ -111,7 +115,7 @@ void gfx_loop( struct context* _ctx ) {
 	struct render_unit _unit;
 	attach_vertex_shader( &_unit, vertex_shader );
 
-	struct vertex triangle[ 3 ] = { 
+	struct vec3 triangle[ 3 ] = { 
 
 		{ 150 + t, 300, 0 },
 		{ 500 + t, 500, 0 },
@@ -119,13 +123,19 @@ void gfx_loop( struct context* _ctx ) {
 	
 	};
 
+	uint32_t v0 = 343;
+	uint32_t v1 = 876;
+	uint32_t v2 = 125;
+
+	uint32_t* vertex_attributes[ 3 ] = { &v0, &v1, &v2 };
+
 	t += 2;
 	
 	execute_unit( 
 		_ctx,
 		&_unit,
 		NULL,
-		NULL,
+		(void**) vertex_attributes,
 		0,
 		triangle,
 		3

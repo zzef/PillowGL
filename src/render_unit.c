@@ -2,6 +2,19 @@
 #include "render_unit.h"
 #include <stdio.h>
 
+// Attach vertex shader to render_unit
+void attach_vertex_shader( 
+	struct render_unit* _unit,
+	void ( *_vertex_shader ) (
+		void* data_in,
+		struct vec3* vertex_in, 
+		struct vec3* vertex_out,
+		void* data_out
+	)
+) {
+	_unit->_vertex_shader = _vertex_shader;
+}
+
 // Exceution unit for carrying out execution of
 // graphics pipeiline
 void execute_unit(
@@ -10,7 +23,7 @@ void execute_unit(
 	void* uniforms,
 	void** vertex_attributes, 
 	size_t va_size,
-	struct vertex* vertex_buffer,
+	struct vec3* vertex_buffer,
 	size_t vb_size
 ) {
 	
@@ -24,10 +37,13 @@ void execute_unit(
 		);
 		*/
 
-		struct vertex vertex_out;
+		struct vec3 vertex_out;
+		void* data_out;
 		_unit->_vertex_shader(
+			vertex_attributes[ i ],
 			&vertex_buffer[ i ],
-			&vertex_out
+			&vertex_out,
+			data_out
 		);
 
 		/*
