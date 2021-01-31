@@ -6,10 +6,11 @@
 void attach_vertex_shader( 
 	struct render_unit* _unit,
 	void ( *_vertex_shader ) (
-		void* data_in,
+		void* uniforms_in,
+		void* attributes_in,
 		struct vec3* vertex_in, 
 		struct vec3* vertex_out,
-		void* data_out
+		void* varyings_out
 	)
 ) {
 	_unit->_vertex_shader = _vertex_shader;
@@ -20,15 +21,13 @@ void attach_vertex_shader(
 void execute_unit(
 	struct context* _ctx,
 	struct render_unit* _unit,
-	void* uniforms,
-	void** vertex_attributes, 
-	size_t va_size,
+	struct execution_unit_in _in,
 	struct vec3* vertex_buffer,
 	size_t vb_size
 ) {
 	
 	for ( size_t i = 0; i < vb_size; i++ ) {
-		
+
 		/*
 		printf("v_in ( %f, %f, %f )\n",
 			vertex_buffer[ i ].x,
@@ -38,12 +37,13 @@ void execute_unit(
 		*/
 
 		struct vec3 vertex_out;
-		void* data_out;
+		void* varyings_out;
 		_unit->_vertex_shader(
-			vertex_attributes[ i ],
+			_in.uniforms,
+			_in.attributes[ i ],
 			&vertex_buffer[ i ],
 			&vertex_out,
-			data_out
+			varyings_out
 		);
 
 		/*

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include "shader.h"
 
 SDL_Texture *Frame;
 SDL_Window *window;
@@ -81,21 +82,6 @@ void display(
 }
 
 
-void vertex_shader(
-	void* data_in,
-	struct vec3* vertex_in, 
-	struct vec3* vertex_out,
-	void* data_out
-) {
-
-	printf( "data %d\n", *( uint32_t* ) data_in );
-		
-	vertex_out->x = vertex_in->x;	
-	vertex_out->y = vertex_in->y;	
-	vertex_out->z = vertex_in->z;	
-
-}
-
 // Graphics loop will be called by api
 void gfx_loop( struct context* _ctx ) {	
 
@@ -127,16 +113,31 @@ void gfx_loop( struct context* _ctx ) {
 	uint32_t v1 = 876;
 	uint32_t v2 = 125;
 
-	uint32_t* vertex_attributes[ 3 ] = { &v0, &v1, &v2 };
+	struct attr atts0 = {
+		5.6f,
+		{ 8.1f, 0.8f, 4.6f }
+	};
+
+	struct attr atts1 = {
+		1.5f,
+		{ 4.1f, 0.4f, 5.6f }
+	};
+
+	struct attr atts2 = {
+		9.5f,
+		{ 0.7f, 7.4f, 8.6f }
+	};
+
+	void* vertex_attributes[ 3 ] = { &atts0, &atts1, &atts2 };
+
+	struct execution_unit_in _in = { NULL, vertex_attributes };
 
 	t += 2;
 	
 	execute_unit( 
 		_ctx,
 		&_unit,
-		NULL,
-		(void**) vertex_attributes,
-		0,
+		_in,
 		triangle,
 		3
 	);
